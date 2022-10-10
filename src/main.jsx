@@ -12,7 +12,7 @@ function renderRoutes(role) {
       return (
         <Routes>
           <Route
-            path="/admin/dashboard"
+            exact path="/admin/dashboard"
             element={<AdminDashboardPage />}
           ></Route>
         </Routes>
@@ -31,6 +31,7 @@ function renderRoutes(role) {
 
 function Main() {
   const { state } = React.useContext(AuthContext);
+  console.log(state)
 
   return (
     <div className="h-full">

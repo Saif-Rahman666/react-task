@@ -52,8 +52,11 @@ const AdminLoginPage = () => {
         if (resData.token !== "") {
         
           localStorage.setItem("token", resData.token)
-          dispatch({ type: "LOGIN" , payload: {isAuthenticated: true, userId: resData.userId, token: resData.token , role: resData.role} }) 
+          dispatch({ type: "LOGIN" , payload: { userId: resData.user_id , role: resData.role} }) 
+
           snackBarDispatch({ type: "SNACKBAR", payload: { message: "logged in successfully" } });
+
+          
         }
         
         

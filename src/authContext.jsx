@@ -15,11 +15,12 @@ const reducer = (state, action) => {
     case "LOGIN":
       //TODO
       
+      console.log(action.payload)
       return {
         ...state,
-        isAuthenticated : action.payload.isAuthenticated,
+        isAuthenticated: true,
         user: action.payload.userId,
-        token: action.payload.token,
+        token: localStorage.getItem("token"),
         role : action.payload.role
       };
     case "LOGOUT":
