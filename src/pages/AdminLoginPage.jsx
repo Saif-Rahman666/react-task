@@ -5,6 +5,8 @@ import * as yup from "yup";
 import MkdSDK from "../utils/MkdSDK";
 import { useNavigate } from "react-router-dom";
 import { AuthContext } from "../authContext";
+import { GlobalContext } from "../globalContext";
+import SnackBar from "../components/SnackBar";
 
 const AdminLoginPage = () => {
   const schema = yup
@@ -15,6 +17,9 @@ const AdminLoginPage = () => {
     .required();
 
   const { dispatch } = React.useContext(AuthContext);
+  //Snackbar message 
+
+  const { state, dispatch: snackBarDispatch, showToast } = React.useContext(GlobalContext);
   const navigate = useNavigate();
   const {
     register,
@@ -25,10 +30,33 @@ const AdminLoginPage = () => {
     resolver: yupResolver(schema),
   });
 
+  const test = () => {
+
+    const sdk = new MkdSDK();
+    sdk.check("admin")
+    
+  }
+
   const onSubmit = async (data) => {
     let sdk = new MkdSDK();
     //TODO
+    
+
+    const role = 'admin'
+    const {email,password} = data
+  
+      const resData = await sdk.login(email,password,role) 
+      //   const data1 = res.json()
+        console.log(resData)
+
+        if (resData.token !== "") {
+          localStorage.setItem("token", resData.token)
+          snackBarDispatch({ type: "SNACKBAR", payload: { message: "logged in successfully" } });
+        }
+        
+        
   };
+
 
   return (
     <div className="w-full max-w-xs mx-auto">
@@ -80,7 +108,10 @@ const AdminLoginPage = () => {
             value="Sign In"
           />
         </div>
+
       </form>
+      <button onClick={test}>test</button>
+        
     </div>
   );
 };

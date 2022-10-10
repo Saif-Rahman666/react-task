@@ -28,7 +28,7 @@ export default function MkdSDK() {
             'Content-Type': 'application/json',
             'x-project': base64Encode
         },
-        
+
         body: JSON.stringify(loginData)
 
     };
@@ -44,8 +44,9 @@ export default function MkdSDK() {
 
   this.getHeader = function () {
     return {
-      Authorization: "Bearer " + localStorage.getItem("token"),
       "x-project": base64Encode,
+      Authorization: "Bearer " + localStorage.getItem("token"),
+      
     };
   };
 
@@ -113,6 +114,35 @@ export default function MkdSDK() {
 
   this.check = async function (role) {
     //TODO
+    const roleData = { 
+      
+      role: role 
+  }
+  
+
+    
+  const settings = {
+      method: 'POST',
+      headers: {
+        "Content-Type": "application/json",
+        "x-project": base64Encode,
+        Authorization: "Bearer " + localStorage.getItem("token"),
+      },
+
+      body: JSON.stringify(roleData)
+
+  };
+
+
+
+  try {
+      const fetchResponse = await fetch(`${this._baseurl}/v2/api/lambda/check`, settings);
+      const data = await fetchResponse.json();
+        return data
+        
+  } catch (e) {
+      return e;
+  }     
   };
 
   return this;
