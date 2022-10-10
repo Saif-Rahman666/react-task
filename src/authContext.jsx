@@ -14,8 +14,13 @@ const reducer = (state, action) => {
   switch (action.type) {
     case "LOGIN":
       //TODO
+      
       return {
         ...state,
+        isAuthenticated : action.payload.isAuthenticated,
+        user: action.payload.userId,
+        token: action.payload.token,
+        role : action.payload.role
       };
     case "LOGOUT":
       localStorage.clear();
@@ -25,7 +30,7 @@ const reducer = (state, action) => {
         user: null,
       };
     default:
-      return state;
+      return state ;
   }
 };
 
@@ -46,6 +51,7 @@ const AuthProvider = ({ children }) => {
 
   React.useEffect(() => {
     //TODO
+    sdk.check("admin")
   }, []);
 
   return (

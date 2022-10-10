@@ -30,12 +30,12 @@ const AdminLoginPage = () => {
     resolver: yupResolver(schema),
   });
 
-  const test = () => {
+  // const test = () => {
 
-    const sdk = new MkdSDK();
-    sdk.check("admin")
+  //   const sdk = new MkdSDK();
+  //   sdk.check("admin")
     
-  }
+  // }
 
   const onSubmit = async (data) => {
     let sdk = new MkdSDK();
@@ -50,7 +50,9 @@ const AdminLoginPage = () => {
         console.log(resData)
 
         if (resData.token !== "") {
+        
           localStorage.setItem("token", resData.token)
+          dispatch({ type: "LOGIN" , payload: {isAuthenticated: true, userId: resData.userId, token: resData.token , role: resData.role} }) 
           snackBarDispatch({ type: "SNACKBAR", payload: { message: "logged in successfully" } });
         }
         
@@ -110,7 +112,7 @@ const AdminLoginPage = () => {
         </div>
 
       </form>
-      <button onClick={test}>test</button>
+      {/* <button onClick={test}>test</button> */}
         
     </div>
   );
