@@ -2,7 +2,7 @@ export default function MkdSDK() {
   this._baseurl = "https://reacttask.mkdlabs.com";
   this._project_id = "reacttask";
   this._secret = "d9hedycyv6p7zw8xi34t9bmtsjsigy5t7";
-  this._table = "";
+  this._table = "video";
   this._custom = "";
   this._method = "";
 
@@ -12,48 +12,44 @@ export default function MkdSDK() {
   this.setTable = function (table) {
     this._table = table;
   };
-  
+
   this.login = async function (email, password, role) {
     //TODO
-    const loginData = { 
-        email: email,
-        password: password,
-        role: role 
-    }
-      
+    const loginData = {
+      email: email,
+      password: password,
+      role: role,
+    };
+
     const settings = {
-        method: 'POST',
-        headers: {
-            
-            'Content-Type': 'application/json',
-            'x-project': base64Encode
-        },
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "x-project": base64Encode,
+      },
 
-        body: JSON.stringify(loginData)
-
+      body: JSON.stringify(loginData),
     };
     try {
-        const fetchResponse = await fetch(`${this._baseurl}/v2/api/lambda/login`, settings);
-        const data = await fetchResponse.json();
-          return data
+      const fetchResponse = await fetch(`${this._baseurl}/v2/api/lambda/login`, settings);
+      const data = await fetchResponse.json();
+      return data;
     } catch (e) {
-        return e;
-    }     
-
+      return e;
+    }
   };
 
   this.getHeader = function () {
     return {
       "x-project": base64Encode,
       Authorization: "Bearer " + localStorage.getItem("token"),
-      
     };
   };
 
   this.baseUrl = function () {
     return this._baseurl;
   };
-  
+
   this.callRestAPI = async function (payload, method) {
     const header = {
       "Content-Type": "application/json",
@@ -63,14 +59,11 @@ export default function MkdSDK() {
 
     switch (method) {
       case "GET":
-        const getResult = await fetch(
-          this._baseurl + `/v1/api/rest/${this._table}/GET`,
-          {
-            method: "post",
-            headers: header,
-            body: JSON.stringify(payload),
-          }
-        );
+        const getResult = await fetch(this._baseurl + `/v1/api/rest/${this._table}/GET`, {
+          method: "post",
+          headers: header,
+          body: JSON.stringify(payload),
+        });
         const jsonGet = await getResult.json();
 
         if (getResult.status === 401) {
@@ -81,7 +74,7 @@ export default function MkdSDK() {
           throw new Error(jsonGet.message);
         }
         return jsonGet;
-      
+
       case "PAGINATE":
         if (!payload.page) {
           payload.page = 1;
@@ -89,14 +82,11 @@ export default function MkdSDK() {
         if (!payload.limit) {
           payload.limit = 10;
         }
-        const paginateResult = await fetch(
-          this._baseurl + `/v1/api/rest/${this._table}/${method}`,
-          {
-            method: "post",
-            headers: header,
-            body: JSON.stringify(payload),
-          }
-        );
+        const paginateResult = await fetch(this._baseurl + `/v1/api/rest/${this._table}/${method}`, {
+          method: "post",
+          headers: header,
+          body: JSON.stringify(payload),
+        });
         const jsonPaginate = await paginateResult.json();
 
         if (paginateResult.status === 401) {
@@ -110,39 +100,32 @@ export default function MkdSDK() {
       default:
         break;
     }
-  };  
+  };
 
   this.check = async function (role) {
     //TODO
-    const roleData = { 
-      
-      role: role 
-  }
-  
+    const roleData = {
+      role: role,
+    };
 
-    
-  const settings = {
-      method: 'POST',
+    const settings = {
+      method: "POST",
       headers: {
         "Content-Type": "application/json",
         "x-project": base64Encode,
         Authorization: "Bearer " + localStorage.getItem("token"),
       },
 
-      body: JSON.stringify(roleData)
+      body: JSON.stringify(roleData),
+    };
 
-  };
-
-
-
-  try {
+    try {
       const fetchResponse = await fetch(`${this._baseurl}/v2/api/lambda/check`, settings);
       const data = await fetchResponse.json();
-        return data
-        
-  } catch (e) {
+      return data;
+    } catch (e) {
       return e;
-  }     
+    }
   };
 
   return this;

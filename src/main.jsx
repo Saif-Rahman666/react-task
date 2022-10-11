@@ -5,16 +5,15 @@ import SnackBar from "./components/SnackBar";
 import AdminDashboardPage from "./pages/AdminDashboardPage";
 import AdminLoginPage from "./pages/AdminLoginPage";
 import NotFoundPage from "./pages/NotFoundPage";
+import { useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 
 function renderRoutes(role) {
   switch (role) {
     case "admin":
       return (
         <Routes>
-          <Route
-            exact path="/admin/dashboard"
-            element={<AdminDashboardPage />}
-          ></Route>
+          <Route exact path="/admin/dashboard" element={<AdminDashboardPage />}></Route>
         </Routes>
       );
       break;
@@ -22,7 +21,7 @@ function renderRoutes(role) {
       return (
         <Routes>
           <Route exact path="/admin/login" element={<AdminLoginPage />}></Route>
-          <Route path="/not-found" exact element={<NotFoundPage />}></Route>
+          <Route path="*" exact element={<NotFoundPage />}></Route>
         </Routes>
       );
       break;
@@ -30,17 +29,20 @@ function renderRoutes(role) {
 }
 
 function Main() {
+
+  const navigate = useNavigate();
+
   const { state } = React.useContext(AuthContext);
-  console.log(state)
+  useEffect(()=> {
+    !state.isAuthenticated && navigate("/admin/login");
+  }, [])
 
   return (
     <div className="h-full">
       <div className="flex w-full">
         <div className="w-full">
           <div className="page-wrapper w-full py-10 px-5">
-            {!state.isAuthenticated
-              ? renderRoutes("none")
-              : renderRoutes(state.role)}
+            {!state.isAuthenticated ? renderRoutes("none") : renderRoutes(state.role)}
           </div>
         </div>
       </div>

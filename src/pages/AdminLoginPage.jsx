@@ -6,7 +6,6 @@ import MkdSDK from "../utils/MkdSDK";
 import { useNavigate } from "react-router-dom";
 import { AuthContext } from "../authContext";
 import { GlobalContext } from "../globalContext";
-import SnackBar from "../components/SnackBar";
 
 const AdminLoginPage = () => {
   const schema = yup
@@ -17,7 +16,7 @@ const AdminLoginPage = () => {
     .required();
 
   const { dispatch } = React.useContext(AuthContext);
-  //Snackbar message 
+  //Snackbar message
 
   const { state, dispatch: snackBarDispatch, showToast } = React.useContext(GlobalContext);
   const navigate = useNavigate();
@@ -34,46 +33,37 @@ const AdminLoginPage = () => {
 
   //   const sdk = new MkdSDK();
   //   sdk.check("admin")
-    
+
   // }
 
   const onSubmit = async (data) => {
     let sdk = new MkdSDK();
     //TODO
-    
 
-    const role = 'admin'
-    const {email,password} = data
-  
-      const resData = await sdk.login(email,password,role) 
-      //   const data1 = res.json()
-        console.log(resData)
+    const role = "admin";
+    const { email, password } = data;
 
-        if (resData.token !== "") {
-        
-          localStorage.setItem("token", resData.token)
-          dispatch({ type: "LOGIN" , payload: { userId: resData.user_id , role: resData.role} }) 
+    const resData = await sdk.login(email, password, role);
+    //   const data1 = res.json()
+    console.log(resData);
 
-          snackBarDispatch({ type: "SNACKBAR", payload: { message: "logged in successfully" } });
+    if (resData.token !== "") {
+      localStorage.setItem("token", resData.token);
+      localStorage.setItem("role", resData.role);
+      localStorage.setItem("user_id", resData.user_id);
 
-          
-        }
-        
-        
+      dispatch({ type: "LOGIN", payload: { userId: resData.user_id, role: resData.role } });
+      snackBarDispatch({ type: "SNACKBAR", payload: { message: "logged in successfully" } });
+
+      navigate("/admin/dashboard");
+    }
   };
-
 
   return (
     <div className="w-full max-w-xs mx-auto">
-      <form
-        onSubmit={handleSubmit(onSubmit)}
-        className="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4 mt-8 "
-      >
+      <form onSubmit={handleSubmit(onSubmit)} className="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4 mt-8 ">
         <div className="mb-4">
-          <label
-            className="block text-gray-700 text-sm font-bold mb-2"
-            htmlFor="email"
-          >
+          <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="email">
             Email
           </label>
           <input
@@ -88,10 +78,7 @@ const AdminLoginPage = () => {
         </div>
 
         <div className="mb-6">
-          <label
-            className="block text-gray-700 text-sm font-bold mb-2"
-            htmlFor="password"
-          >
+          <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="password">
             Password
           </label>
           <input
@@ -102,9 +89,7 @@ const AdminLoginPage = () => {
               errors.password?.message ? "border-red-500" : ""
             }`}
           />
-          <p className="text-red-500 text-xs italic">
-            {errors.password?.message}
-          </p>
+          <p className="text-red-500 text-xs italic">{errors.password?.message}</p>
         </div>
         <div className="flex items-center justify-between">
           <input
@@ -113,10 +98,8 @@ const AdminLoginPage = () => {
             value="Sign In"
           />
         </div>
-
       </form>
       {/* <button onClick={test}>test</button> */}
-        
     </div>
   );
 };
